@@ -1,0 +1,210 @@
+/* LoginForm.css */
+
+.login-form {
+  padding: 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Error banner */
+.error-banner {
+  background: #fef2f2;
+  border: 1.5px solid #fca5a5;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #991b1b;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Field group */
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #344054;
+}
+
+.field-input-wrap {
+  display: flex;
+  align-items: center;
+  border: 1.5px solid #d0d5dd;
+  border-radius: 8px;
+  background: #f9fafb;
+  padding: 0 12px;
+  height: 44px;
+  transition: border-color 0.2s ease;
+}
+
+.field-input-wrap:focus-within {
+  border-color: var(--role-color, #1d4ed8);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.08);
+}
+
+.field-icon {
+  font-size: 16px;
+  margin-right: 8px;
+  opacity: 0.6;
+}
+
+.field-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  color: #101828;
+  outline: none;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.field-input::placeholder {
+  color: #98a2b3;
+}
+
+.toggle-password {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.toggle-password:hover {
+  opacity: 1;
+}
+
+/* Options row */
+.options-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: -4px;
+}
+
+.remember-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: #344054;
+  cursor: pointer;
+}
+
+.remember-checkbox {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--role-color, #1d4ed8);
+  cursor: pointer;
+}
+
+.forgot-link {
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.forgot-link:hover {
+  text-decoration: underline;
+}
+
+/* Submit button */
+.submit-btn {
+  height: 46px;
+  border-radius: 8px;
+  border: none;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.1s ease;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  letter-spacing: 0.2px;
+}
+
+.submit-btn:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+}
+
+.submit-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #98a2b3;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1.5px;
+  background: #e4e7ec;
+}
+
+/* Alternative login button */
+.alt-btn {
+  height: 42px;
+  border-radius: 8px;
+  background: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.alt-btn:hover {
+  background: #f9fafb;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .login-form {
+    padding: 20px 20px;
+  }
+
+  .card-header {
+    padding: 20px 20px 16px;
+  }
+
+  .card-footer {
+    padding: 14px 20px 18px;
+  }
+
+  .card-heading {
+    font-size: 20px;
+  }
+}
