@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -68,3 +69,8 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+=======
+# Mental-Awareness-Web-System
+It's a system designed for university students having issues to do with mental health
+The system tracks user's moods when they log in to the website. The system allows users to book sessions with counsellors and also provides emergency support contacts in case the students feel overwhelmed. The system also has additional resources such as breathing exercises, relaxing audio sessions and journals and articles that enable users to see how people overcame past experiences and gain knowledge how to overcome such situations
+>>>>>>> 589a2ed074b4b02b396a2504972ee3a8b1cf0760
