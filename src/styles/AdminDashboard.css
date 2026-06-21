@@ -1,0 +1,50 @@
+/* AdminDashboard.css */
+* { box-sizing: border-box; }
+.ad-page { min-height: 100vh; background: #f0f2f5; font-family: 'Segoe UI', Arial, sans-serif; }
+.ad-topbar { background: #ffffff; border-bottom: 1.5px solid #e4e7ec; padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; }
+.ad-heading { font-size: 20px; font-weight: 700; color: #101828; margin: 0 0 2px; }
+.ad-date { font-size: 12px; color: #98a2b3; margin: 0; }
+.ad-reports-btn { background: #92400e; color: #ffffff; border: none; border-radius: 8px; padding: 10px 18px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Segoe UI', Arial, sans-serif; }
+.ad-reports-btn:hover { opacity: 0.9; }
+.ad-grid { padding: 24px 28px; display: flex; flex-direction: column; gap: 20px; }
+
+.ad-banner { background: linear-gradient(135deg, #92400e, #b45309); border-radius: 14px; padding: 28px; display: flex; align-items: center; justify-content: space-between; color: #ffffff; }
+.ad-banner-title { font-size: 22px; font-weight: 700; margin: 0 0 6px; }
+.ad-banner-sub { font-size: 13px; opacity: 0.85; margin: 0 0 16px; }
+.ad-banner-actions { display: flex; gap: 10px; }
+.ad-btn-white { background: #ffffff; color: #92400e; border: none; border-radius: 8px; padding: 10px 18px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Segoe UI', Arial, sans-serif; }
+.ad-btn-outline { background: rgba(255,255,255,0.15); color: #ffffff; border: 1.5px solid rgba(255,255,255,0.4); border-radius: 8px; padding: 10px 18px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Segoe UI', Arial, sans-serif; }
+
+.ad-stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.ad-stat-card { background: #ffffff; border: 1.5px solid #e4e7ec; border-radius: 12px; padding: 16px; }
+.ad-stat-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.ad-stat-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+.ad-stat-change { font-size: 10px; font-weight: 700; color: #16a34a; background: #dcfce7; padding: 2px 7px; border-radius: 8px; }
+.ad-stat-value { font-size: 24px; font-weight: 700; color: #101828; line-height: 1; }
+.ad-stat-label { font-size: 11px; color: #667085; margin-top: 4px; }
+
+.ad-bottom-row { display: grid; grid-template-columns: 3fr 2fr; gap: 20px; }
+.ad-card { background: #ffffff; border: 1.5px solid #e4e7ec; border-radius: 12px; padding: 20px; }
+.ad-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.ad-card-title { font-size: 14px; font-weight: 700; color: #101828; }
+.ad-card-link { background: none; border: none; font-size: 12px; font-weight: 600; color: #92400e; cursor: pointer; font-family: 'Segoe UI', Arial, sans-serif; }
+
+.ad-activity-list { display: flex; flex-direction: column; gap: 10px; }
+.ad-activity-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-radius: 8px; border: 1.5px solid #f2f4f7; }
+.ad-activity-item.alert { background: #fef2f2; border-color: #fca5a5; }
+.ad-activity-item.disabled { background: #f9fafb; border-color: #e4e7ec; }
+.ad-activity-icon { font-size: 16px; flex-shrink: 0; }
+.ad-activity-message { font-size: 12px; color: #344054; line-height: 1.4; }
+.ad-activity-time { font-size: 10px; color: #98a2b3; margin-top: 3px; }
+
+.ad-counsellor-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.ad-counsellor-item { display: flex; align-items: center; gap: 10px; padding: 8px; }
+.ad-c-avatar { width: 36px; height: 36px; border-radius: 50%; background: #fef3c7; color: #92400e; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+.ad-c-name { font-size: 13px; font-weight: 700; color: #101828; }
+.ad-c-meta { font-size: 11px; color: #667085; margin-top: 2px; }
+
+.ad-quick-actions { display: flex; flex-direction: column; gap: 8px; padding-top: 14px; border-top: 1.5px solid #f2f4f7; }
+.ad-quick-btn { height: 38px; border-radius: 8px; border: 1.5px solid #d0d5dd; background: #ffffff; font-size: 12px; font-weight: 600; color: #344054; cursor: pointer; font-family: 'Segoe UI', Arial, sans-serif; }
+.ad-quick-btn:hover { background: #f9fafb; }
+
+@media (max-width: 900px) { .ad-stats-row { grid-template-columns: repeat(2,1fr); } .ad-bottom-row { grid-template-columns: 1fr; } }

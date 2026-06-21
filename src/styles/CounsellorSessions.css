@@ -1,0 +1,76 @@
+/* CounsellorSessions.css */
+* { box-sizing: border-box; }
+
+.cs-page { min-height: 100vh; background: #f0f2f5; font-family: 'Segoe UI', Arial, sans-serif; }
+
+/* Topbar */
+.cs-topbar { background: #ffffff; border-bottom: 1.5px solid #e4e7ec; padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; }
+.cs-title { font-size: 20px; font-weight: 700; color: #101828; margin: 0 0 2px; }
+.cs-sub { font-size: 12px; color: #98a2b3; margin: 0; }
+.cs-back-btn { background: #f2f4f7; border: none; border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: 600; color: #344054; cursor: pointer; font-family: 'Segoe UI', Arial, sans-serif; }
+.cs-back-btn:hover { background: #e4e7ec; }
+
+/* Filters */
+.cs-filters { display: flex; gap: 8px; padding: 16px 28px; background: #ffffff; border-bottom: 1.5px solid #e4e7ec; flex-wrap: wrap; }
+.cs-filter-btn { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 20px; border: 1.5px solid #d0d5dd; background: #ffffff; font-size: 13px; font-weight: 600; color: #667085; cursor: pointer; font-family: 'Segoe UI', Arial, sans-serif; transition: all 0.2s; }
+.cs-filter-btn:hover { border-color: #065f46; color: #065f46; }
+.cs-filter-btn.active { border-color: #065f46; background: #d1fae5; color: #065f46; }
+.cs-filter-count { background: rgba(0,0,0,0.08); border-radius: 10px; padding: 1px 7px; font-size: 11px; }
+.cs-filter-btn.active .cs-filter-count { background: rgba(6,95,70,0.15); }
+
+/* Content */
+.cs-content { padding: 24px 28px; max-width: 900px; display: flex; flex-direction: column; gap: 14px; }
+
+.cs-empty { text-align: center; padding: 50px; color: #667085; display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 14px; }
+
+/* Session card */
+.cs-session-card { background: #ffffff; border: 1.5px solid #e4e7ec; border-radius: 12px; padding: 16px; }
+.cs-session-card.pending     { border-left: 4px solid #fbbf24; }
+.cs-session-card.confirmed   { border-left: 4px solid #86efac; }
+.cs-session-card.completed   { border-left: 4px solid #a5b4fc; }
+.cs-session-card.rescheduled { border-left: 4px solid #fdba74; }
+
+.cs-session-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.cs-session-left { display: flex; align-items: flex-start; gap: 12px; }
+
+.cs-s-avatar { width: 42px; height: 42px; border-radius: 50%; background: #d1fae5; color: #065f46; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+.cs-s-name { font-size: 14px; font-weight: 700; color: #101828; }
+.cs-s-detail { font-size: 12px; color: #667085; margin-top: 2px; }
+.cs-s-time { font-size: 12px; color: #98a2b3; margin-top: 2px; }
+
+.cs-session-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+.cs-status-badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 10px; }
+
+.cs-action-btns { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+
+.cs-btn-approve     { background: #065f46; color: #fff; border: none; border-radius: 6px; padding: 6px 12px; font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'Segoe UI', Arial, sans-serif; }
+.cs-btn-reschedule  { background: #ffffff; color: #344054; border: 1.5px solid #d0d5dd; border-radius: 6px; padding: 6px 12px; font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'Segoe UI', Arial, sans-serif; }
+.cs-btn-reject      { background: #ffffff; color: #dc2626; border: 1.5px solid #fca5a5; border-radius: 6px; padding: 6px 12px; font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'Segoe UI', Arial, sans-serif; }
+.cs-btn-start       { background: #065f46; color: #fff; border: none; border-radius: 6px; padding: 6px 12px; font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'Segoe UI', Arial, sans-serif; }
+.cs-btn-notes       { background: #ffffff; color: #344054; border: 1.5px solid #d0d5dd; border-radius: 6px; padding: 6px 12px; font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'Segoe UI', Arial, sans-serif; }
+.cs-btn-expand      { background: none; color: #98a2b3; border: none; padding: 6px 4px; font-size: 11px; font-weight: 600; cursor: pointer; font-family: 'Segoe UI', Arial, sans-serif; }
+
+.cs-btn-approve:hover, .cs-btn-start:hover { opacity: 0.9; }
+.cs-btn-reschedule:hover, .cs-btn-notes:hover { background: #f9fafb; }
+.cs-btn-reject:hover { background: #fef2f2; }
+
+/* Reason box */
+.cs-reason-box { margin-top: 14px; padding: 12px 14px; background: #f9fafb; border: 1.5px solid #f2f4f7; border-radius: 8px; }
+.cs-reason-label { font-size: 11px; font-weight: 700; color: #344054; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px; }
+.cs-reason-text { font-size: 13px; color: #667085; line-height: 1.5; }
+
+/* Notes panel */
+.cs-notes-panel { margin-top: 14px; padding: 14px; background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 8px; display: flex; flex-direction: column; gap: 8px; }
+.cs-notes-label { font-size: 12px; font-weight: 700; color: #166534; display: flex; align-items: center; gap: 8px; }
+.cs-notes-private { font-size: 10px; font-weight: 600; color: #16a34a; background: #dcfce7; padding: 2px 8px; border-radius: 8px; }
+.cs-notes-textarea { width: 100%; min-height: 80px; border: 1.5px solid #86efac; border-radius: 8px; background: #ffffff; padding: 10px 12px; font-size: 13px; color: #101828; font-family: 'Segoe UI', Arial, sans-serif; outline: none; resize: vertical; line-height: 1.5; }
+.cs-notes-textarea:focus { border-color: #16a34a; }
+.cs-notes-footer { display: flex; align-items: center; justify-content: space-between; }
+.cs-btn-save-notes { background: #16a34a; color: #fff; border: none; border-radius: 6px; padding: 7px 16px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'Segoe UI', Arial, sans-serif; }
+.cs-btn-save-notes:hover { opacity: 0.9; }
+
+@media (max-width: 640px) {
+  .cs-session-top { flex-direction: column; }
+  .cs-session-right { align-items: flex-start; width: 100%; }
+  .cs-action-btns { justify-content: flex-start; }
+}

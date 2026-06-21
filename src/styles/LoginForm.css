@@ -38,14 +38,14 @@
   align-items: center;
   border: 1.5px solid #d0d5dd;
   border-radius: 8px;
-  background: #f9fafb;
+  background: #ffffff;
   padding: 0 12px;
   height: 44px;
   transition: border-color 0.2s ease;
 }
 
 .field-input-wrap:focus-within {
-  border-color: var(--role-color, #1d4ed8);
+  border-color: #1d4ed8;
   background: #ffffff;
   box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.08);
 }
@@ -64,20 +64,29 @@
   color: #101828;
   outline: none;
   font-family: 'Segoe UI', Arial, sans-serif;
+  -webkit-text-fill-color: #101828;
 }
 
 .field-input::placeholder {
   color: #98a2b3;
+  -webkit-text-fill-color: #98a2b3;
 }
 
 .toggle-password {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 16px;
   padding: 0;
-  opacity: 0.6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
   transition: opacity 0.2s;
+  margin-left: 6px;
+}
+
+.toggle-password:hover {
+  opacity: 1;
 }
 
 .toggle-password:hover {
