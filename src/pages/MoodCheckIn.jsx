@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import '../styles/MoodCheckIn.css';
 import '../styles/Sidebar.css';
+import { saveMoodCheckIn } from '../api';
 
 const moods = [
   { id: 1, emoji: '😞', label: 'Terrible', color: '#ef4444', light: '#fee2e2' },
@@ -31,17 +32,29 @@ const MoodCheckIn = () => {
     );
   };
 
-  const handleSave = () => {
-    if (!selectedMood) {
-      alert('Please select how you are feeling today.');
-      return;
-    }
-    // TODO: connect to backend API to save mood entry
+  const handleSave = async () => {
+  if (!selectedMood) {
+    alert('Please select how you are feeling today.');
+    return;
+  }
+
+  try {
+    await saveMoodCheckIn({
+      moodScore: selectedMood.id,
+      moodLabel: selectedMood.label,
+      tags: selectedTags,
+      journalEntry: journal,
+    });
+
     setSaved(true);
     setTimeout(() => {
       navigate('/student/dashboard');
     }, 2000);
-  };
+  } catch (error) {
+    alert('Something went wrong while saving your mood entry. Please try again.');
+    console.error(error);
+  }
+};
 
   const today = new Date().toLocaleDateString('en-KE', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',

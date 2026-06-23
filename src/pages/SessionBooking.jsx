@@ -1,15 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
+import { getActiveCounsellors, createBooking } from '../api';
 import '../styles/SessionBooking.css';
 import '../styles/Sidebar.css';
-
-const counsellors = [
-  { id: 1, name: 'Dr. Amina Kariuki',  specialisation: 'Anxiety & Stress',      rating: 4.8, sessions: 84, avatar: 'AK', available: true  },
-  { id: 2, name: 'Dr. James Omondi',   specialisation: 'Depression & Recovery',  rating: 4.6, sessions: 62, avatar: 'JO', available: true  },
-  { id: 3, name: 'Dr. Fatuma Hassan',  specialisation: 'Trauma & Grief',         rating: 4.9, sessions: 97, avatar: 'FH', available: false },
-  { id: 4, name: 'Dr. Peter Mwangi',   specialisation: 'CBT & Mindfulness',      rating: 4.7, sessions: 73, avatar: 'PM', available: true  },
-];
 
 const availableSlots = {
   'Mon': ['9:00 AM', '11:00 AM', '2:00 PM'],
@@ -30,16 +24,50 @@ const STEPS = ['Select counsellor', 'Choose slot', 'Confirm booking'];
 const SessionBooking = () => {
   const navigate = useNavigate();
   const [step, setStep]                     = useState(1);
+  const [counsellors, setCounsellors]       = useState([]);
+  const [loadingCounsellors, setLoadingCounsellors] = useState(true);
   const [selectedCounsellor, setCounsellor] = useState(null);
   const [sessionType, setSessionType]       = useState('video');
   const [reason, setReason]                 = useState('');
   const [selectedDay, setSelectedDay]       = useState('Tue');
   const [selectedTime, setSelectedTime]     = useState(null);
   const [confirmed, setConfirmed]           = useState(false);
+  const [submitting, setSubmitting]         = useState(false);
 
-  const handleConfirm = () => {
-    setConfirmed(true);
-    setTimeout(() => navigate('/student/dashboard'), 2500);
+  // Fetch active counsellors when the page loads
+  useEffect(() => {
+    const fetchCounsellors = async () => {
+      try {
+        const data = await getActiveCounsellors();
+        setCounsellors(data);
+      } catch (error) {
+        console.error('Failed to fetch counsellors:', error);
+      } finally {
+        setLoadingCounsellors(false);
+      }
+    };
+    fetchCounsellors();
+  }, []);
+
+  const handleConfirm = async () => {
+    setSubmitting(true);
+    try {
+      await createBooking({
+        counsellor: selectedCounsellor._id,
+        sessionType,
+        reason,
+        day: selectedDay,
+        time: selectedTime,
+      });
+
+      setConfirmed(true);
+      setTimeout(() => navigate('/student/dashboard'), 2500);
+    } catch (error) {
+      alert('Something went wrong while creating your booking. Please try again.');
+      console.error(error);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -77,28 +105,29 @@ const SessionBooking = () => {
               <div className="sb-card">
                 <div className="sb-card-title">Choose your counsellor</div>
                 <div className="counsellor-grid">
-                  {counsellors.map((c) => (
-                    <div
-                      key={c.id}
-                      className={`counsellor-card ${selectedCounsellor?.id === c.id ? 'selected' : ''} ${!c.available ? 'unavailable' : ''}`}
-                      onClick={() => c.available && setCounsellor(c)}
-                    >
-                      <div className="c-avatar">{c.avatar}</div>
-                      <div className="c-info">
-                        <div className="c-name">{c.name}</div>
-                        <div className="c-spec">{c.specialisation}</div>
-                        <div className="c-meta">
-                          <span>Star {c.rating}</span>
-                          <span> · </span>
-                          <span>{c.sessions} sessions</span>
+                  {loadingCounsellors ? (
+                    <div style={{ padding: '20px', color: '#667085' }}>Loading counsellors...</div>
+                  ) : counsellors.length === 0 ? (
+                    <div style={{ padding: '20px', color: '#667085' }}>No counsellors are available right now. Please check back later.</div>
+                  ) : (
+                    counsellors.map((c) => (
+                      <div
+                        key={c._id}
+                        className={`counsellor-card ${selectedCounsellor?._id === c._id ? 'selected' : ''}`}
+                        onClick={() => setCounsellor(c)}
+                      >
+                        <div className="c-avatar">
+                          {c.fullName.split(' ').map((n) => n[0]).join('').substring(0, 2)}
                         </div>
-                        <span className={`c-badge ${c.available ? 'available' : 'not-available'}`}>
-                          {c.available ? 'Available' : 'Unavailable'}
-                        </span>
+                        <div className="c-info">
+                          <div className="c-name">{c.fullName}</div>
+                          <div className="c-spec">{c.specialisation || 'General counselling'}</div>
+                          <span className="c-badge available">Available</span>
+                        </div>
+                        {selectedCounsellor?._id === c._id && <div className="selected-tick">Selected</div>}
                       </div>
-                      {selectedCounsellor?.id === c.id && <div className="selected-tick">Selected</div>}
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
 
                 <div className="sb-section">
@@ -174,7 +203,7 @@ const SessionBooking = () => {
 
                 {selectedTime && (
                   <div className="selected-slot-banner">
-                    <strong>Selected:</strong> {selectedDay} at {selectedTime} with {selectedCounsellor?.name}
+                    <strong>Selected:</strong> {selectedDay} at {selectedTime} with {selectedCounsellor?.fullName}
                   </div>
                 )}
 
@@ -194,7 +223,7 @@ const SessionBooking = () => {
                   <div className="confirm-success">
                     <div className="success-icon">🎉</div>
                     <h2>Booking submitted!</h2>
-                    <p>Your session request has been sent to {selectedCounsellor?.name}. You will be notified once confirmed.</p>
+                    <p>Your session request has been sent to {selectedCounsellor?.fullName}. You will be notified once confirmed.</p>
                     <p className="redirect-note">Redirecting to dashboard...</p>
                   </div>
                 ) : (
@@ -204,11 +233,11 @@ const SessionBooking = () => {
                       <div className="confirm-header">Booking summary</div>
                       <div className="confirm-row">
                         <span className="confirm-key">Counsellor</span>
-                        <span className="confirm-val">{selectedCounsellor?.name}</span>
+                        <span className="confirm-val">{selectedCounsellor?.fullName}</span>
                       </div>
                       <div className="confirm-row">
                         <span className="confirm-key">Specialisation</span>
-                        <span className="confirm-val">{selectedCounsellor?.specialisation}</span>
+                        <span className="confirm-val">{selectedCounsellor?.specialisation || 'General counselling'}</span>
                       </div>
                       <div className="confirm-row">
                         <span className="confirm-key">Day</span>
@@ -237,7 +266,9 @@ const SessionBooking = () => {
                     </div>
                     <div className="sb-btn-row">
                       <button className="sb-btn-secondary" onClick={() => setStep(2)}>Edit booking</button>
-                      <button className="sb-btn-confirm" onClick={handleConfirm}>Confirm session</button>
+                      <button className="sb-btn-confirm" onClick={handleConfirm} disabled={submitting}>
+                        {submitting ? 'Booking...' : 'Confirm session'}
+                      </button>
                     </div>
                   </>
                 )}

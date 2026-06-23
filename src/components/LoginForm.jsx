@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../styles/LoginForm.css';
+import { loginUser } from '../api';
 
 const LoginForm = ({ role, navigate }) => {
   const [email, setEmail] = useState('');
@@ -26,21 +27,29 @@ const LoginForm = ({ role, navigate }) => {
 
     setLoading(true);
 
-    // Simulate API call — replace with real axios call to your backend
-    setTimeout(() => {
+    try {
+      const data = await loginUser(role.id, email, password);
+
+      // Save token and user info for later use
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data));
+
       setLoading(false);
-      // TODO: replace with real auth
-      // On success redirect to dashboard
+
+      // Redirect based on role
       if (role.id === 'student') {
-  navigate('/student/mood');
-} else if (role.id === 'counsellor') {
-  navigate('/counsellor/dashboard');
-} else if (role.id === 'admin') {
-  navigate('/admin/dashboard');
-} else {
-  navigate(role.dashboard);
-}
-    }, 1500);
+        navigate('/student/mood');
+      } else if (role.id === 'counsellor') {
+        navigate('/counsellor/dashboard');
+      } else if (role.id === 'admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate(role.dashboard);
+      }
+    } catch (err) {
+      setLoading(false);
+      setError(err.response?.data?.message || 'Something went wrong. Please try again.');
+    }
   };
 
   return (
@@ -76,36 +85,36 @@ const LoginForm = ({ role, navigate }) => {
       <div className="field-group">
         <label className="field-label">Password</label>
         <div className="field-input-wrap">
-  <input
-    type={showPassword ? 'text' : 'password'}
-    className="field-input"
-    placeholder="Enter your password"
-    value={password}
-    onChange={(e) => setPassword(e.target.value)}
-    autoComplete="current-password"
-    required
-  />
-  <button
-    type="button"
-    className="toggle-password"
-    onClick={() => setShowPassword(!showPassword)}
-    aria-label="Toggle password visibility"
-    title={showPassword ? 'Hide password' : 'Show password'}
-  >
-    {showPassword ? (
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#667085" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
-        <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
-        <line x1="1" y1="1" x2="23" y2="23"/>
-      </svg>
-    ) : (
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#667085" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-        <circle cx="12" cy="12" r="3"/>
-      </svg>
-    )}
-  </button>
-</div>
+          <input
+            type={showPassword ? 'text' : 'password'}
+            className="field-input"
+            placeholder="Enter your password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
+            required
+          />
+          <button
+            type="button"
+            className="toggle-password"
+            onClick={() => setShowPassword(!showPassword)}
+            aria-label="Toggle password visibility"
+            title={showPassword ? 'Hide password' : 'Show password'}
+          >
+            {showPassword ? (
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#667085" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                <line x1="1" y1="1" x2="23" y2="23"/>
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#667085" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* 2FA field — admin only */}
