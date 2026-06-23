@@ -1,0 +1,346 @@
+/* MoodCheckIn.css */
+
+* {
+  box-sizing: border-box;
+}
+
+.mood-page {
+  min-height: 100vh;
+  background: #f0f2f5;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* Header */
+.mood-header {
+  background: #ffffff;
+  border-bottom: 1.5px solid #e4e7ec;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.mood-header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.back-btn {
+  background: #f2f4f7;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #344054;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.back-btn:hover {
+  background: #e4e7ec;
+}
+
+.mood-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #101828;
+  margin: 0 0 2px;
+}
+
+.mood-date {
+  font-size: 12px;
+  color: #98a2b3;
+  margin: 0;
+}
+
+.mood-header-icon {
+  font-size: 28px;
+}
+
+/* Content */
+.mood-content {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Card */
+.mood-card {
+  background: #ffffff;
+  border: 1.5px solid #e4e7ec;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #344054;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 14px;
+}
+
+/* Mood emojis */
+.mood-emojis {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mood-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 6px;
+  border-radius: 10px;
+  border: 2px solid #e4e7ec;
+  background: #f9fafb;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mood-btn:hover {
+  border-color: #d0d5dd;
+  background: #f3f4f6;
+  transform: translateY(-2px);
+}
+
+.mood-btn.selected {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.mood-emoji {
+  font-size: 28px;
+}
+
+.mood-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #667085;
+}
+
+/* Scale bar */
+.mood-scale {
+  margin-top: 16px;
+}
+
+.scale-bar {
+  height: 8px;
+  border-radius: 4px;
+  background: #f2f4f7;
+  overflow: hidden;
+}
+
+.scale-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.4s ease, background 0.4s ease;
+}
+
+.scale-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+}
+
+.scale-labels span {
+  font-size: 10px;
+  color: #98a2b3;
+}
+
+/* Tags */
+.tags-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag-btn {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1.5px solid #d0d5dd;
+  background: #ffffff;
+  color: #667085;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tag-btn:hover {
+  border-color: #1d4ed8;
+  color: #1d4ed8;
+}
+
+.tag-btn.active {
+  border-color: #1d4ed8;
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+/* Journal */
+.journal-textarea {
+  width: 100%;
+  min-height: 120px;
+  border: 1.5px solid #d0d5dd;
+  border-radius: 8px;
+  background: #f9fafb;
+  padding: 12px 14px;
+  font-size: 14px;
+  color: #101828;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  line-height: 1.6;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.journal-textarea:focus {
+  border-color: #1d4ed8;
+  background: #ffffff;
+}
+
+.journal-textarea::placeholder {
+  color: #98a2b3;
+}
+
+.journal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.journal-privacy {
+  font-size: 11px;
+  color: #98a2b3;
+}
+
+.char-count {
+  font-size: 11px;
+  color: #98a2b3;
+}
+
+/* Save button */
+.save-btn {
+  width: 100%;
+  height: 48px;
+  border-radius: 10px;
+  border: none;
+  background: #1d4ed8;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.save-btn:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.save-btn:disabled {
+  background: #16a34a;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Help footer */
+.help-footer {
+  background: #fef2f2;
+  border: 1.5px solid #fca5a5;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.help-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.help-icon {
+  font-size: 24px;
+}
+
+.help-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #991b1b;
+}
+
+.help-sub {
+  font-size: 11px;
+  color: #b91c1c;
+  margin-top: 2px;
+}
+
+.help-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.help-btn {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.help-call {
+  background: #dc2626;
+  color: #ffffff;
+  border: none;
+}
+
+.help-chat {
+  background: #ffffff;
+  color: #dc2626;
+  border: 1.5px solid #fca5a5;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .mood-header {
+    padding: 12px 16px;
+  }
+
+  .mood-emojis {
+    gap: 4px;
+  }
+
+  .mood-emoji {
+    font-size: 22px;
+  }
+
+  .help-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

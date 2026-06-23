@@ -1,0 +1,73 @@
+/* CounsellorProfile.css */
+* { box-sizing: border-box; }
+
+.cp-page { min-height: 100vh; background: #f0f2f5; font-family: 'Segoe UI', Arial, sans-serif; position: relative; }
+
+/* Header */
+.cp-header { background: linear-gradient(135deg, #065f46, #047857); padding: 20px 28px 32px; text-align: center; color: #ffffff; position: relative; }
+.cp-back-btn { position: absolute; top: 20px; left: 28px; background: rgba(255,255,255,0.15); border: 1.5px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 8px 14px; font-size: 12px; font-weight: 600; color: #ffffff; cursor: pointer; font-family: 'Segoe UI', Arial, sans-serif; }
+.cp-back-btn:hover { background: rgba(255,255,255,0.25); }
+
+.cp-avatar-large { width: 76px; height: 76px; border-radius: 50%; background: #ffffff; color: #065f46; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 700; margin: 16px auto 12px; border: 3px solid rgba(255,255,255,0.4); }
+.cp-name { font-size: 20px; font-weight: 700; margin: 0 0 4px; }
+.cp-spec { font-size: 13px; opacity: 0.85; margin: 0 0 16px; }
+
+.cp-stats-row { display: flex; align-items: center; justify-content: center; gap: 20px; }
+.cp-stat { text-align: center; }
+.cp-stat-value { font-size: 18px; font-weight: 700; }
+.cp-stat-label { font-size: 10px; opacity: 0.75; margin-top: 2px; }
+.cp-stat-divider { width: 1px; height: 30px; background: rgba(255,255,255,0.3); }
+
+/* Content */
+.cp-content { padding: 24px 28px; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+
+/* Bio card */
+.cp-bio-card { background: #ffffff; border: 1.5px solid #e4e7ec; border-radius: 12px; padding: 18px 20px; }
+.cp-bio-label { font-size: 11px; font-weight: 700; color: #344054; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.cp-bio-text { font-size: 13px; color: #667085; line-height: 1.6; margin: 0; }
+
+/* Menu */
+.cp-menu-card { background: #ffffff; border: 1.5px solid #e4e7ec; border-radius: 12px; overflow: hidden; }
+.cp-menu-item { width: 100%; display: flex; align-items: center; gap: 12px; padding: 14px 18px; border: none; background: #ffffff; border-bottom: 1px solid #f2f4f7; cursor: pointer; text-align: left; font-family: 'Segoe UI', Arial, sans-serif; transition: background 0.2s; }
+.cp-menu-item:last-child { border-bottom: none; }
+.cp-menu-item:hover { background: #f9fafb; }
+
+.cp-menu-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.cp-menu-text { flex: 1; }
+.cp-menu-title { font-size: 13px; font-weight: 700; color: #101828; }
+.cp-menu-sub { font-size: 11px; color: #98a2b3; margin-top: 2px; }
+.cp-menu-arrow { font-size: 16px; color: #d0d5dd; }
+
+/* Logout */
+.cp-logout-btn { width: 100%; height: 48px; border-radius: 10px; border: 1.5px solid #fca5a5; background: #fef2f2; color: #dc2626; font-size: 14px; font-weight: 700; cursor: pointer; font-family: 'Segoe UI', Arial, sans-serif; transition: background 0.2s; }
+.cp-logout-btn:hover { background: #fee2e2; }
+
+/* Modal */
+.cp-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
+.cp-modal { background: #ffffff; border-radius: 14px; width: 100%; max-width: 440px; max-height: 85vh; overflow-y: auto; }
+
+.cp-modal-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 22px; border-bottom: 1.5px solid #f2f4f7; }
+.cp-modal-header h2 { font-size: 16px; font-weight: 700; color: #101828; margin: 0; }
+.cp-modal-close { background: #f2f4f7; border: none; border-radius: 6px; width: 28px; height: 28px; font-size: 14px; color: #667085; cursor: pointer; }
+.cp-modal-close:hover { background: #e4e7ec; }
+
+.cp-modal-body { padding: 18px 22px; display: flex; flex-direction: column; gap: 14px; }
+.cp-form-group { display: flex; flex-direction: column; gap: 6px; }
+.cp-form-label { font-size: 12px; font-weight: 700; color: #344054; }
+.cp-form-input { height: 40px; border: 1.5px solid #d0d5dd; border-radius: 8px; padding: 0 12px; font-size: 13px; font-family: 'Segoe UI', Arial, sans-serif; outline: none; }
+.cp-form-input:focus { border-color: #065f46; }
+.cp-form-textarea { min-height: 90px; border: 1.5px solid #d0d5dd; border-radius: 8px; padding: 10px 12px; font-size: 13px; font-family: 'Segoe UI', Arial, sans-serif; outline: none; resize: vertical; line-height: 1.5; }
+.cp-form-textarea:focus { border-color: #065f46; }
+
+.cp-modal-placeholder { font-size: 13px; color: #667085; line-height: 1.6; margin: 0; }
+
+.cp-modal-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 16px 22px; border-top: 1.5px solid #f2f4f7; }
+.cp-modal-cancel { height: 40px; padding: 0 18px; border-radius: 8px; border: 1.5px solid #d0d5dd; background: #ffffff; color: #344054; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Segoe UI', Arial, sans-serif; }
+.cp-modal-cancel:hover { background: #f9fafb; }
+.cp-modal-save { height: 40px; padding: 0 18px; border-radius: 8px; border: none; background: #065f46; color: #ffffff; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'Segoe UI', Arial, sans-serif; }
+.cp-modal-save:hover { opacity: 0.9; }
+
+@media (max-width: 480px) {
+  .cp-stats-row { gap: 14px; }
+  .cp-content { padding: 16px; }
+}

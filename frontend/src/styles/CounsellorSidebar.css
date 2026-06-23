@@ -1,0 +1,21 @@
+/* CounsellorSidebar.css */
+.cs-sidebar { width: 240px; min-width: 240px; min-height: 100vh; background: #ffffff; border-right: 1.5px solid #e4e7ec; display: flex; flex-direction: column; position: fixed; top: 0; left: 0; z-index: 100; }
+.cs-brand { display: flex; align-items: center; gap: 10px; padding: 20px 20px 16px; border-bottom: 1.5px solid #f2f4f7; }
+.cs-brand-icon { font-size: 28px; }
+.cs-brand-name { font-size: 16px; font-weight: 700; color: #101828; }
+.cs-brand-sub { font-size: 11px; color: #98a2b3; }
+.cs-profile { display: flex; align-items: center; gap: 10px; padding: 14px 20px; border-bottom: 1.5px solid #f2f4f7; background: #f0fdf4; }
+.cs-avatar { width: 36px; height: 36px; border-radius: 50%; background: #d1fae5; color: #065f46; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+.cs-name { font-size: 13px; font-weight: 700; color: #101828; }
+.cs-role { font-size: 10px; color: #667085; }
+.cs-nav { flex: 1; display: flex; flex-direction: column; padding: 12px; gap: 4px; }
+.cs-nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; border: none; background: transparent; cursor: pointer; width: 100%; text-align: left; transition: background 0.2s; font-family: 'Segoe UI', Arial, sans-serif; }
+.cs-nav-item:hover { background: #f2f4f7; }
+.cs-nav-item.active { background: #d1fae5; }
+.cs-nav-item.active .cs-nav-label { color: #065f46; font-weight: 700; }
+.cs-nav-icon { font-size: 18px; width: 24px; text-align: center; }
+.cs-nav-label { font-size: 14px; font-weight: 500; color: #344054; }
+.cs-footer { padding: 12px 12px 20px; border-top: 1.5px solid #f2f4f7; }
+.cs-logout-btn { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; border: 1.5px solid #fca5a5; background: #fef2f2; cursor: pointer; width: 100%; font-family: 'Segoe UI', Arial, sans-serif; transition: background 0.2s; }
+.cs-logout-btn:hover { background: #fee2e2; }
+.cs-logout-btn .cs-nav-label { color: #dc2626; font-weight: 700; }

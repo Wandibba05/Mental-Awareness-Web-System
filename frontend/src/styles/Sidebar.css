@@ -1,0 +1,154 @@
+/* Sidebar.css */
+
+.sidebar {
+  width: 240px;
+  min-width: 240px;
+  min-height: 100vh;
+  background: #ffffff;
+  border-right: 1.5px solid #e4e7ec;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+}
+
+/* Brand */
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 20px 16px;
+  border-bottom: 1.5px solid #f2f4f7;
+}
+
+.brand-icon {
+  font-size: 28px;
+}
+
+.brand-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #101828;
+}
+
+.brand-sub {
+  font-size: 11px;
+  color: #98a2b3;
+}
+
+/* Profile */
+.sidebar-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  border-bottom: 1.5px solid #f2f4f7;
+  background: #f9fafb;
+}
+
+.profile-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #dbeafe;
+  color: #1d4ed8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.profile-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #101828;
+}
+
+.profile-role {
+  font-size: 11px;
+  color: #98a2b3;
+}
+
+/* Nav */
+.sidebar-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 12px;
+  gap: 4px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: background 0.2s ease;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.nav-item:hover {
+  background: #f2f4f7;
+}
+
+.nav-item.active {
+  background: #dbeafe;
+}
+
+.nav-item.active .nav-label {
+  color: #1d4ed8;
+  font-weight: 700;
+}
+
+.nav-icon {
+  font-size: 18px;
+  width: 24px;
+  text-align: center;
+}
+
+.nav-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #344054;
+}
+
+/* Footer / logout */
+.sidebar-footer {
+  padding: 12px 12px 20px;
+  border-top: 1.5px solid #f2f4f7;
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1.5px solid #fca5a5;
+  background: #fef2f2;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  transition: background 0.2s;
+}
+
+.logout-btn:hover {
+  background: #fee2e2;
+}
+
+.logout-btn .nav-label {
+  color: #dc2626;
+  font-weight: 700;
+}
