@@ -113,3 +113,32 @@ export const getReportsData = async () => {
   const response = await axios.get(`${API_BASE_URL}/stats/reports`, getAuthHeaders());
   return response.data;
 };
+
+// ───────────────────────────────
+// AVAILABILITY SLOTS
+// ───────────────────────────────
+
+export const getCounsellorSlots = async () => {
+  const response = await axios.get(`${API_BASE_URL}/slots/mine`, getAuthHeaders());
+  return response.data;
+};
+
+export const getOpenSlotsForCounsellor = async (counsellorId) => {
+  const response = await axios.get(`${API_BASE_URL}/slots/counsellor/${counsellorId}`, getAuthHeaders());
+  return response.data;
+};
+
+export const createSlot = async (day, time) => {
+  const response = await axios.post(`${API_BASE_URL}/slots`, { day, time }, getAuthHeaders());
+  return response.data;
+};
+
+export const updateSlotStatus = async (id, status) => {
+  const response = await axios.put(`${API_BASE_URL}/slots/${id}/status`, { status }, getAuthHeaders());
+  return response.data;
+};
+
+export const deleteSlot = async (id) => {
+  const response = await axios.delete(`${API_BASE_URL}/slots/${id}`, getAuthHeaders());
+  return response.data;
+};
