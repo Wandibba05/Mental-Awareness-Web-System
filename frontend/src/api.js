@@ -100,4 +100,16 @@ export const updateStudentStatus = async (id, status) => {
   const response = await axios.put(`${API_BASE_URL}/students/${id}/status`, { status }, getAuthHeaders());
   return response.data;
 };
+// ───────────────────────────────
+// ADMIN STATS
+// ───────────────────────────────
 
+export const getDashboardStats = async () => {
+  const response = await axios.get(`${API_BASE_URL}/stats/dashboard`, getAuthHeaders());
+  return response.data;
+};
+
+export const getReportsData = async () => {
+  const response = await axios.get(`${API_BASE_URL}/stats/reports`, getAuthHeaders());
+  return response.data;
+};

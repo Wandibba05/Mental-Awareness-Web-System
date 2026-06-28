@@ -1,32 +1,77 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminSidebar from '../components/AdminSidebar';
+import { getDashboardStats } from '../api';
 import '../styles/AdminDashboard.css';
 import '../styles/AdminSidebar.css';
-
-const stats = [
-  { icon: '🎓', label: 'Total students',    value: '342', bg: '#dbeafe', change: '+12 this month' },
-  { icon: '🩺', label: 'Total counsellors', value: '18',  bg: '#d1fae5', change: '+2 this month'  },
-  { icon: '📅', label: 'Total sessions',    value: '1,204', bg: '#fef3c7', change: '+86 this week' },
-  { icon: '🧠', label: 'Mood check-ins',    value: '3,890', bg: '#f3e8ff', change: '+210 this week' },
-];
-
-const recentActivity = [
-  { id: 1, icon: '👤', message: 'New student registered: Faith Wambui',           time: '10 min ago', type: 'student'    },
-  { id: 2, icon: '🩺', message: 'New counsellor approved: Dr. Peter Mwangi',       time: '1 hour ago', type: 'counsellor' },
-  { id: 3, icon: '📅', message: '12 new sessions booked today',                    time: '2 hours ago',type: 'session'    },
-  { id: 4, icon: '⚠️', message: '3 students flagged for low mood scores this week',time: '3 hours ago',type: 'alert'      },
-  { id: 5, icon: '🚫', message: 'Student account disabled: violation of terms',    time: '5 hours ago',type: 'disabled'   },
-];
-
-const topCounsellors = [
-  { name: 'Dr. Amina Kariuki', sessions: 84, rating: 4.8, avatar: 'AK' },
-  { name: 'Dr. Fatuma Hassan', sessions: 97, rating: 4.9, avatar: 'FH' },
-  { name: 'Dr. James Omondi',  sessions: 62, rating: 4.6, avatar: 'JO' },
-];
-
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const [statsData, setStatsData] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const data = await getDashboardStats();
+        setStatsData(data);
+      } catch (error) {
+        console.error('Failed to fetch dashboard stats:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStats();
+  }, []);
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex' }}>
+        <AdminSidebar />
+        <div style={{ marginLeft: '240px', flex: 1, padding: '40px', textAlign: 'center', color: '#667085' }}>
+          Loading dashboard...
+        </div>
+      </div>
+    );
+  }
+
+  const stats = [
+    { icon: '🎓', label: 'Total students',    value: statsData?.totalStudents ?? 0,    bg: '#dbeafe' },
+    { icon: '🩺', label: 'Total counsellors', value: statsData?.totalCounsellors ?? 0, bg: '#d1fae5' },
+    { icon: '📅', label: 'Total sessions',    value: statsData?.totalBookings ?? 0,    bg: '#fef3c7' },
+    { icon: '🧠', label: 'Mood check-ins',    value: statsData?.totalMoodCheckIns ?? 0,bg: '#f3e8ff' },
+  ];
+
+  // Build a combined, sorted recent activity feed
+  const recentActivity = [
+    ...(statsData?.recentStudents || []).map((s) => ({
+      id: `student-${s._id}`,
+      icon: '👤',
+      message: `New student registered: ${s.fullName}`,
+      time: new Date(s.createdAt).toLocaleDateString('en-KE', { day: 'numeric', month: 'short' }),
+      type: 'student',
+      date: s.createdAt,
+    })),
+    ...(statsData?.recentCounsellors || []).map((c) => ({
+      id: `counsellor-${c._id}`,
+      icon: '🩺',
+      message: `New counsellor ${c.status === 'pending' ? 'awaiting approval' : 'approved'}: ${c.fullName}`,
+      time: new Date(c.createdAt).toLocaleDateString('en-KE', { day: 'numeric', month: 'short' }),
+      type: 'counsellor',
+      date: c.createdAt,
+    })),
+    ...(statsData?.recentBookings || []).map((b) => ({
+      id: `booking-${b._id}`,
+      icon: '📅',
+      message: `${b.student?.fullName || 'A student'} booked a session with ${b.counsellor?.fullName || 'a counsellor'}`,
+      time: new Date(b.createdAt).toLocaleDateString('en-KE', { day: 'numeric', month: 'short' }),
+      type: 'session',
+      date: b.createdAt,
+    })),
+  ]
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 6);
+
+  const topCounsellors = statsData?.topCounsellors || [];
 
   return (
     <div style={{ display: 'flex' }}>
@@ -67,15 +112,14 @@ const AdminDashboard = () => {
             {/* Stats */}
             <div className="ad-stats-row">
               {stats.map((s, i) => (
-                <div key={i} className="ad-stat-card">
-                  <div className="ad-stat-top">
-                    <div className="ad-stat-icon" style={{ background: s.bg }}>{s.icon}</div>
-                    <span className="ad-stat-change">{s.change}</span>
-                  </div>
-                  <div className="ad-stat-value">{s.value}</div>
-                  <div className="ad-stat-label">{s.label}</div>
-                </div>
-              ))}
+  <div key={i} className="ad-stat-card">
+    <div className="ad-stat-top">
+      <div className="ad-stat-icon" style={{ background: s.bg }}>{s.icon}</div>
+    </div>
+    <div className="ad-stat-value">{s.value}</div>
+    <div className="ad-stat-label">{s.label}</div>
+  </div>
+))}
             </div>
 
             <div className="ad-bottom-row">
