@@ -20,6 +20,7 @@ app.use('/api/mood', require('./routes/moodRoutes'));
 app.use('/api/counsellors', require('./routes/counsellorRoutes'));
 app.use('/api/bookings', require('./routes/bookingRoutes'));
 app.use('/api/students', require('./routes/studentRoutes'));
+app.use('/api/stats', require('./routes/statsRoutes'));
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
