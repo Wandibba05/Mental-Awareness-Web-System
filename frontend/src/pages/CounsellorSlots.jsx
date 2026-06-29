@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CounsellorSidebar from '../components/CounsellorSidebar';
+import { getCounsellorSlots, createSlot, updateSlotStatus, deleteSlot } from '../api';
 import '../styles/CounsellorSlots.css';
 import '../styles/CounsellorSidebar.css';
 
@@ -14,83 +15,71 @@ const weekDays = [
   { day: 'Sun', date: '15' },
 ];
 
-// Mock slot data per day — replace with real API data later
-const initialSlots = {
-  'Mon': [
-    { time: '9:00 AM',  status: 'open'   },
-    { time: '10:00 AM', status: 'booked' },
-    { time: '2:00 PM',  status: 'open'   },
-  ],
-  'Tue': [
-    { time: '9:00 AM',  status: 'open'   },
-    { time: '10:00 AM', status: 'booked' },
-    { time: '11:30 AM', status: 'open'   },
-    { time: '2:00 PM',  status: 'booked' },
-    { time: '3:00 PM',  status: 'blocked'},
-    { time: '4:00 PM',  status: 'open'   },
-  ],
-  'Wed': [
-    { time: '10:00 AM', status: 'open'   },
-    { time: '2:00 PM',  status: 'open'   },
-  ],
-  'Thu': [
-    { time: '9:00 AM',  status: 'open'   },
-    { time: '11:30 AM', status: 'booked' },
-    { time: '4:00 PM',  status: 'open'   },
-  ],
-  'Fri': [
-    { time: '9:00 AM',  status: 'open'   },
-    { time: '1:00 PM',  status: 'open'   },
-    { time: '3:30 PM',  status: 'booked' },
-  ],
-  'Sat': [],
-  'Sun': [],
-};
-
 const CounsellorSlots = () => {
   const navigate = useNavigate();
   const [selectedDay, setSelectedDay] = useState('Tue');
-  const [slots, setSlots] = useState(initialSlots);
+  const [allSlots, setAllSlots] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [newTime, setNewTime] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
+  const [adding, setAdding] = useState(false);
 
-  const daySlots = slots[selectedDay] || [];
-
-  const toggleBlock = (index) => {
-    setSlots((prev) => {
-      const updated = { ...prev };
-      const list = [...updated[selectedDay]];
-      const slot = list[index];
-      if (slot.status === 'booked') return prev; // cannot toggle a booked slot
-      list[index] = { ...slot, status: slot.status === 'open' ? 'blocked' : 'open' };
-      updated[selectedDay] = list;
-      return updated;
-    });
-  };
-
-  const removeSlot = (index) => {
-    setSlots((prev) => {
-      const updated = { ...prev };
-      const list = [...updated[selectedDay]];
-      if (list[index].status === 'booked') {
-        alert('This slot has a booking and cannot be removed.');
-        return prev;
+  useEffect(() => {
+    const fetchSlots = async () => {
+      try {
+        const data = await getCounsellorSlots();
+        setAllSlots(data);
+      } catch (error) {
+        console.error('Failed to fetch slots:', error);
+      } finally {
+        setLoading(false);
       }
-      list.splice(index, 1);
-      updated[selectedDay] = list;
-      return updated;
-    });
+    };
+    fetchSlots();
+  }, []);
+
+  const daySlots = allSlots.filter((s) => s.day === selectedDay);
+
+  const toggleBlock = async (slot) => {
+    if (slot.status === 'booked') return;
+    try {
+      const newStatus = slot.status === 'open' ? 'blocked' : 'open';
+      const updated = await updateSlotStatus(slot._id, newStatus);
+      setAllSlots((prev) => prev.map((s) => (s._id === slot._id ? updated : s)));
+    } catch (error) {
+      alert('Failed to update slot.');
+      console.error(error);
+    }
   };
 
-  const addSlot = () => {
+  const removeSlot = async (slot) => {
+    if (slot.status === 'booked') {
+      alert('This slot has a booking and cannot be removed.');
+      return;
+    }
+    try {
+      await deleteSlot(slot._id);
+      setAllSlots((prev) => prev.filter((s) => s._id !== slot._id));
+    } catch (error) {
+      alert('Failed to remove slot.');
+      console.error(error);
+    }
+  };
+
+  const addSlot = async () => {
     if (!newTime) return;
-    setSlots((prev) => {
-      const updated = { ...prev };
-      updated[selectedDay] = [...(updated[selectedDay] || []), { time: newTime, status: 'open' }];
-      return updated;
-    });
-    setNewTime('');
-    setShowAddForm(false);
+    setAdding(true);
+    try {
+      const created = await createSlot(selectedDay, newTime);
+      setAllSlots((prev) => [...prev, created]);
+      setNewTime('');
+      setShowAddForm(false);
+    } catch (error) {
+      alert('Failed to add slot.');
+      console.error(error);
+    } finally {
+      setAdding(false);
+    }
   };
 
   const counts = {
@@ -130,7 +119,7 @@ const CounsellorSlots = () => {
                   >
                     <div className="csl-day-name">{d.day}</div>
                     <div className="csl-day-num">{d.date}</div>
-                    <div className="csl-day-slot-count">{(slots[d.day] || []).length} slots</div>
+                    <div className="csl-day-slot-count">{allSlots.filter((s) => s.day === d.day).length} slots</div>
                   </button>
                 ))}
               </div>
@@ -172,21 +161,28 @@ const CounsellorSlots = () => {
                     value={newTime}
                     onChange={(e) => setNewTime(e.target.value)}
                   />
-                  <button className="csl-add-confirm" onClick={addSlot}>Add</button>
+                  <button className="csl-add-confirm" onClick={addSlot} disabled={adding}>
+                    {adding ? 'Adding...' : 'Add'}
+                  </button>
                   <button className="csl-add-cancel" onClick={() => { setShowAddForm(false); setNewTime(''); }}>Cancel</button>
                 </div>
               )}
 
               {/* Slot list */}
-              {daySlots.length === 0 ? (
+              {loading ? (
+                <div className="csl-empty">
+                  <div style={{ fontSize: '36px' }}>⏳</div>
+                  <p>Loading slots...</p>
+                </div>
+              ) : daySlots.length === 0 ? (
                 <div className="csl-empty">
                   <div style={{ fontSize: '36px' }}>📭</div>
                   <p>No slots set for {selectedDay}. Add a slot to start accepting bookings.</p>
                 </div>
               ) : (
                 <div className="csl-slots-grid">
-                  {daySlots.map((slot, index) => (
-                    <div key={index} className={`csl-slot-chip ${slot.status}`}>
+                  {daySlots.map((slot) => (
+                    <div key={slot._id} className={`csl-slot-chip ${slot.status}`}>
                       <span className="csl-slot-time">{slot.time}</span>
                       <span className="csl-slot-status">
                         {slot.status === 'open' && 'Open'}
@@ -195,12 +191,12 @@ const CounsellorSlots = () => {
                       </span>
                       <div className="csl-slot-actions">
                         {slot.status !== 'booked' && (
-                          <button className="csl-slot-toggle" onClick={() => toggleBlock(index)} title={slot.status === 'open' ? 'Block this slot' : 'Unblock this slot'}>
+                          <button className="csl-slot-toggle" onClick={() => toggleBlock(slot)} title={slot.status === 'open' ? 'Block this slot' : 'Unblock this slot'}>
                             {slot.status === 'open' ? '🔒' : '🔓'}
                           </button>
                         )}
                         {slot.status !== 'booked' && (
-                          <button className="csl-slot-remove" onClick={() => removeSlot(index)} title="Remove slot">
+                          <button className="csl-slot-remove" onClick={() => removeSlot(slot)} title="Remove slot">
                             ✕
                           </button>
                         )}
