@@ -142,3 +142,30 @@ export const deleteSlot = async (id) => {
   const response = await axios.delete(`${API_BASE_URL}/slots/${id}`, getAuthHeaders());
   return response.data;
 };
+// ───────────────────────────────
+// JOURNALS / RESOURCES
+// ───────────────────────────────
+
+export const getApprovedJournals = async () => {
+  const response = await axios.get(`${API_BASE_URL}/journals/approved`, getAuthHeaders());
+  return response.data;
+};
+
+export const createJournal = async (journalData) => {
+  const response = await axios.post(`${API_BASE_URL}/journals`, journalData, getAuthHeaders());
+  return response.data;
+};
+
+// ───────────────────────────────
+// JOURNALS (Admin moderation)
+// ───────────────────────────────
+
+export const getAllJournalsAdmin = async () => {
+  const response = await axios.get(`${API_BASE_URL}/journals/all`, getAuthHeaders());
+  return response.data;
+};
+
+export const updateJournalStatus = async (id, status) => {
+  const response = await axios.put(`${API_BASE_URL}/journals/${id}/status`, { status }, getAuthHeaders());
+  return response.data;
+};

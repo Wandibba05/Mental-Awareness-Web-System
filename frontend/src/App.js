@@ -12,6 +12,7 @@ import CounsellorSlots from './pages/CounsellorSlots';
 import CounsellorProfile from './pages/CounsellorProfile';
 import AdminUsers from './pages/AdminUsers';
 import AdminReports from './pages/AdminReports';
+import AdminJournals from './pages/AdminJournals';
 function App() {
   return (
     <Router>
@@ -30,6 +31,7 @@ function App() {
 <Route path="/counsellor/profile" element={<CounsellorProfile />} />
 <Route path="/admin/users" element={<AdminUsers />} />
 <Route path="/admin/reports" element={<AdminReports />} />
+<Route path="/admin/journals" element={<AdminJournals />} />
       </Routes>
     </Router>
   );
