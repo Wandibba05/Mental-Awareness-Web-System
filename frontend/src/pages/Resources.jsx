@@ -1,50 +1,90 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
+import { getApprovedJournals, createJournal } from '../api';
 import '../styles/Resources.css';
 import '../styles/Sidebar.css';
 
-const journals = [
-  { id: 1, title: '"How I got through my first year without losing myself"', category: 'Anxiety', author: 'Anonymous', time: '4 min read', color: '#dbeafe', textColor: '#1d4ed8', excerpt: 'A student shares how therapy and journaling helped her manage severe anxiety during her first year of university...' },
-  { id: 2, title: '"Finding light after a very dark semester"', category: 'Depression', author: 'Anonymous', time: '3 min read', color: '#d1fae5', textColor: '#065f46', excerpt: 'After failing two units and losing a close friend, I hit rock bottom. Here is how I climbed back up...' },
-  { id: 3, title: '"Small steps that changed everything"', category: 'Recovery', author: 'James M.', time: '5 min read', color: '#fef3c7', textColor: '#92400e', excerpt: 'I used to think recovery was a big dramatic moment. Turns out it is a hundred tiny decisions every day...' },
-  { id: 4, title: '"Talking to a counsellor saved my semester"', category: 'Counselling', author: 'Anonymous', time: '4 min read', color: '#f3e8ff', textColor: '#6b21a8', excerpt: 'I was skeptical about counselling. I thought it was only for people with serious problems. I was wrong...' },
-];
-
 const resources = [
-  { id: 1, icon: '🧘', title: 'Breathing exercises',    desc: 'Guided techniques to calm anxiety in minutes',         badge: 'Interactive', badgeColor: '#dbeafe', badgeText: '#1d4ed8' },
-  { id: 2, icon: '📋', title: 'Self-assessment quiz',   desc: 'Check your mental wellness with a PHQ-9 quiz',          badge: 'Quiz',        badgeColor: '#d1fae5', badgeText: '#065f46' },
-  { id: 3, icon: '🎧', title: 'Mindfulness audio',      desc: 'Calming guided meditations and sleep sounds',           badge: 'Audio',       badgeColor: '#fef3c7', badgeText: '#92400e' },
-  { id: 4, icon: '📚', title: 'Recommended reads',      desc: 'Books and articles curated by our counsellors',         badge: 'Reading',     badgeColor: '#f3e8ff', badgeText: '#6b21a8' },
-  { id: 5, icon: '🌐', title: 'External helplines',     desc: 'Kenya and international mental health crisis lines',    badge: 'Emergency',   badgeColor: '#fee2e2', badgeText: '#991b1b' },
+  { id: 1, icon: '🧘', title: 'Breathing exercises',  desc: 'Guided techniques to calm anxiety in minutes',      badge: 'Interactive', badgeColor: '#dbeafe', badgeText: '#1d4ed8' },
+  { id: 2, icon: '📋', title: 'Self-assessment quiz', desc: 'Check your mental wellness with a PHQ-9 quiz',       badge: 'Quiz',        badgeColor: '#d1fae5', badgeText: '#065f46' },
+  { id: 3, icon: '🎧', title: 'Mindfulness audio',    desc: 'Calming guided meditations and sleep sounds',        badge: 'Audio',       badgeColor: '#fef3c7', badgeText: '#92400e' },
+  { id: 4, icon: '📚', title: 'Recommended reads',    desc: 'Books and articles curated by our counsellors',      badge: 'Reading',     badgeColor: '#f3e8ff', badgeText: '#6b21a8' },
+  { id: 5, icon: '🌐', title: 'External helplines',   desc: 'Kenya and international mental health crisis lines', badge: 'Emergency',   badgeColor: '#fee2e2', badgeText: '#991b1b' },
 ];
 
 const categories = ['All', 'Anxiety', 'Depression', 'Recovery', 'Counselling'];
+
+const categoryColors = {
+  Anxiety:     { color: '#dbeafe', text: '#1d4ed8' },
+  Depression:  { color: '#d1fae5', text: '#065f46' },
+  Recovery:    { color: '#fef3c7', text: '#92400e' },
+  Stress:      { color: '#fee2e2', text: '#991b1b' },
+  Grief:       { color: '#f3e8ff', text: '#6b21a8' },
+  Counselling: { color: '#e0e7ff', text: '#3730a3' },
+};
 
 const Resources = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab]         = useState('journals');
   const [activeCategory, setActiveCategory] = useState('All');
+  const [journals, setJournals]           = useState([]);
+  const [loadingJournals, setLoadingJournals] = useState(true);
   const [storyTitle, setStoryTitle]       = useState('');
   const [storyCategory, setStoryCategory] = useState('Anxiety');
   const [storyText, setStoryText]         = useState('');
   const [rating, setRating]               = useState(0);
   const [isAnonymous, setIsAnonymous]     = useState(true);
+  const [submitting, setSubmitting]       = useState(false);
   const [submitted, setSubmitted]         = useState(false);
   const [search, setSearch]               = useState('');
   const [expandedJournal, setExpandedJournal] = useState(null);
 
+  useEffect(() => {
+    const fetchJournals = async () => {
+      try {
+        const data = await getApprovedJournals();
+        setJournals(data);
+      } catch (error) {
+        console.error('Failed to fetch journals:', error);
+      } finally {
+        setLoadingJournals(false);
+      }
+    };
+    fetchJournals();
+  }, []);
+
   const filteredJournals = journals.filter((j) => {
     const matchesCategory = activeCategory === 'All' || j.category === activeCategory;
-    const matchesSearch   = j.title.toLowerCase().includes(search.toLowerCase()) || j.excerpt.toLowerCase().includes(search.toLowerCase());
+    const matchesSearch = j.title.toLowerCase().includes(search.toLowerCase()) || j.storyText.toLowerCase().includes(search.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
-  const handleSubmit = () => {
-    if (!storyText) { alert('Please write your story before submitting.'); return; }
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 3000);
-    setStoryTitle(''); setStoryText(''); setRating(0);
+  const handleSubmit = async () => {
+    if (!storyText || !storyTitle) {
+      alert('Please add a title and write your story before submitting.');
+      return;
+    }
+    setSubmitting(true);
+    try {
+      await createJournal({
+        title: storyTitle,
+        category: storyCategory,
+        storyText,
+        rating: rating || null,
+        isAnonymous,
+      });
+      setSubmitted(true);
+      setTimeout(() => setSubmitted(false), 3000);
+      setStoryTitle('');
+      setStoryText('');
+      setRating(0);
+    } catch (error) {
+      alert('Something went wrong while submitting your story. Please try again.');
+      console.error(error);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -109,42 +149,57 @@ const Resources = () => {
                 </div>
 
                 {/* Journal cards */}
-                <div className="journal-grid">
-                  {filteredJournals.map((j) => (
-                    <div key={j.id} className="journal-card">
-                      <div className="journal-banner" style={{ background: j.color }}>
-                        📖
-                      </div>
-                      <div className="journal-body">
-                        <span className="journal-tag" style={{ background: j.color, color: j.textColor }}>
-                          {j.category}
-                        </span>
-                        <div className="journal-title">{j.title}</div>
-                        <div className="journal-excerpt">
-                          {expandedJournal === j.id ? j.excerpt : `${j.excerpt.substring(0, 80)}...`}
-                        </div>
-                        <div className="journal-meta">
-                          <div className="journal-author">
-                            <div className="author-avatar">{j.author[0]}</div>
-                            <span>{j.author} · {j.time}</span>
-                          </div>
-                          <button
-                            className="read-btn"
-                            style={{ color: j.textColor }}
-                            onClick={() => setExpandedJournal(expandedJournal === j.id ? null : j.id)}
-                          >
-                            {expandedJournal === j.id ? 'Show less' : 'Read more'}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {filteredJournals.length === 0 && (
+                {loadingJournals ? (
+                  <div className="empty-state">
+                    <div style={{ fontSize: '40px' }}>⏳</div>
+                    <p>Loading stories...</p>
+                  </div>
+                ) : filteredJournals.length === 0 ? (
                   <div className="empty-state">
                     <div style={{ fontSize: '40px' }}>📭</div>
-                    <p>No stories found for your search. Try a different keyword or category.</p>
+                    <p>
+                      {journals.length === 0
+                        ? 'No stories have been published yet. Be the first to share yours!'
+                        : 'No stories found for your search. Try a different keyword or category.'}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="journal-grid">
+                    {filteredJournals.map((j) => {
+                      const colors = categoryColors[j.category] || { color: '#f2f4f7', text: '#344054' };
+                      const isExpanded = expandedJournal === j._id;
+                      return (
+                        <div key={j._id} className="journal-card">
+                          <div className="journal-banner" style={{ background: colors.color }}>
+                            📖
+                          </div>
+                          <div className="journal-body">
+                            <span className="journal-tag" style={{ background: colors.color, color: colors.text }}>
+                              {j.category}
+                            </span>
+                            <div className="journal-title">{j.title}</div>
+                            <div className="journal-excerpt">
+                              {isExpanded ? j.storyText : `${j.storyText.substring(0, 80)}${j.storyText.length > 80 ? '...' : ''}`}
+                            </div>
+                            <div className="journal-meta">
+                              <div className="journal-author">
+                                <div className="author-avatar">{j.author?.[0] || 'A'}</div>
+                                <span>
+                                  {j.author} · {new Date(j.createdAt).toLocaleDateString('en-KE', { day: 'numeric', month: 'short' })}
+                                </span>
+                              </div>
+                              <button
+                                className="read-btn"
+                                style={{ color: colors.text }}
+                                onClick={() => setExpandedJournal(isExpanded ? null : j._id)}
+                              >
+                                {isExpanded ? 'Show less' : 'Read more'}
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -245,12 +300,12 @@ const Resources = () => {
                         </div>
                       </div>
                       <div className="anon-publishing">
-                        🔒 Publishing as: <strong>{isAnonymous ? 'Anonymous student' : storyTitle || 'Your name'}</strong>
+                        🔒 Publishing as: <strong>{isAnonymous ? 'Anonymous student' : 'Your name'}</strong>
                       </div>
                     </div>
 
-                    <button className="submit-btn" onClick={handleSubmit}>
-                      Submit story
+                    <button className="submit-btn" onClick={handleSubmit} disabled={submitting}>
+                      {submitting ? 'Submitting...' : 'Submit story'}
                     </button>
                   </>
                 )}

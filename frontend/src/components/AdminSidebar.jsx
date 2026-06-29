@@ -5,6 +5,7 @@ import '../styles/AdminSidebar.css';
 const navItems = [
   { icon: '🏠', label: 'Dashboard',    path: '/admin/dashboard' },
   { icon: '👥', label: 'Manage users', path: '/admin/users'     },
+  { icon: '📖', label: 'Journals',     path: '/admin/journals'  },
   { icon: '📊', label: 'Reports',      path: '/admin/reports'   },
 ];
 
