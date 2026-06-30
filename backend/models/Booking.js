@@ -11,6 +11,10 @@ const bookingSchema = new mongoose.Schema({
     ref: 'Counsellor',
     required: true,
   },
+  slot: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'AvailabilitySlot',
+  },
   sessionType: {
     type: String,
     enum: ['video', 'call', 'in-person'],

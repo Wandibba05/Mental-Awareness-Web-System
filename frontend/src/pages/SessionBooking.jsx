@@ -1,17 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
-import { getActiveCounsellors, createBooking } from '../api';
+import { getActiveCounsellors, createBooking, getOpenSlotsForCounsellor } from '../api';
 import '../styles/SessionBooking.css';
 import '../styles/Sidebar.css';
 
-const availableSlots = {
-  'Mon': ['9:00 AM', '11:00 AM', '2:00 PM'],
-  'Tue': ['9:00 AM', '10:30 AM', '1:00 PM', '3:00 PM'],
-  'Wed': ['10:00 AM', '2:00 PM'],
-  'Thu': ['9:00 AM', '11:30 AM', '4:00 PM'],
-  'Fri': ['9:00 AM', '1:00 PM', '3:30 PM'],
-};
+
 
 const sessionTypes = [
   { id: 'video',     label: 'Video call', icon: '📹' },
@@ -29,7 +23,9 @@ const SessionBooking = () => {
   const [selectedCounsellor, setCounsellor] = useState(null);
   const [sessionType, setSessionType]       = useState('video');
   const [reason, setReason]                 = useState('');
-  const [selectedDay, setSelectedDay]       = useState('Tue');
+  const [slots, setSlots]                   = useState([]);
+  const [loadingSlots, setLoadingSlots]     = useState(false);
+  const [selectedDay, setSelectedDay]       = useState(null);
   const [selectedTime, setSelectedTime]     = useState(null);
   const [confirmed, setConfirmed]           = useState(false);
   const [submitting, setSubmitting]         = useState(false);
@@ -48,6 +44,40 @@ const SessionBooking = () => {
     };
     fetchCounsellors();
   }, []);
+
+  // Fetch open slots whenever a counsellor is selected
+  useEffect(() => {
+    if (!selectedCounsellor) {
+      setSlots([]);
+      return;
+    }
+    const fetchSlots = async () => {
+      setLoadingSlots(true);
+      try {
+        const data = await getOpenSlotsForCounsellor(selectedCounsellor._id);
+        setSlots(data);
+        // Auto-select the first day that has slots
+        const firstDay = data.length > 0 ? data[0].day : null;
+        setSelectedDay(firstDay);
+        setSelectedTime(null);
+      } catch (error) {
+        console.error('Failed to fetch slots:', error);
+      } finally {
+        setLoadingSlots(false);
+      }
+    };
+    fetchSlots();
+  }, [selectedCounsellor]);
+
+  // Group slots by day for display
+  const slotsByDay = slots.reduce((acc, s) => {
+    if (!acc[s.day]) acc[s.day] = [];
+    acc[s.day].push(s);
+    return acc;
+  }, {});
+
+  const availableDays = Object.keys(slotsByDay);
+  const daySlots = selectedDay ? (slotsByDay[selectedDay] || []) : [];
 
   const handleConfirm = async () => {
     setSubmitting(true);
@@ -166,55 +196,66 @@ const SessionBooking = () => {
             )}
 
             {/* STEP 2 */}
-            {step === 2 && (
-              <div className="sb-card">
-                <div className="sb-card-title">Choose a date and time</div>
+{step === 2 && (
+  <div className="sb-card">
+    <div className="sb-card-title">Choose a date and time</div>
 
-                <div className="sb-section">
-                  <div className="sb-section-label">Select a day</div>
-                  <div className="day-row">
-                    {Object.keys(availableSlots).map((day) => (
-                      <button
-                        key={day}
-                        className={`day-btn ${selectedDay === day ? 'active' : ''}`}
-                        onClick={() => { setSelectedDay(day); setSelectedTime(null); }}
-                      >
-                        <div className="day-name">{day}</div>
-                        <div className="day-slots">{availableSlots[day].length} slots</div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
+    {loadingSlots ? (
+      <p style={{ color: '#667085', fontSize: '13px' }}>Loading available slots...</p>
+    ) : availableDays.length === 0 ? (
+      <div style={{ textAlign: 'center', padding: '20px', color: '#98a2b3' }}>
+        <div style={{ fontSize: '36px' }}>📭</div>
+        <p>{selectedCounsellor?.fullName} has no available slots right now. Please choose a different counsellor or check back later.</p>
+      </div>
+    ) : (
+      <>
+        <div className="sb-section">
+          <div className="sb-section-label">Select a day</div>
+          <div className="day-row">
+            {availableDays.map((day) => (
+              <button
+                key={day}
+                className={`day-btn ${selectedDay === day ? 'active' : ''}`}
+                onClick={() => { setSelectedDay(day); setSelectedTime(null); }}
+              >
+                <div className="day-name">{day}</div>
+                <div className="day-slots">{slotsByDay[day].length} slots</div>
+              </button>
+            ))}
+          </div>
+        </div>
 
-                <div className="sb-section">
-                  <div className="sb-section-label">Available times — {selectedDay}</div>
-                  <div className="time-grid">
-                    {availableSlots[selectedDay].map((time) => (
-                      <button
-                        key={time}
-                        className={`time-btn ${selectedTime === time ? 'active' : ''}`}
-                        onClick={() => setSelectedTime(time)}
-                      >
-                        {time}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+        <div className="sb-section">
+          <div className="sb-section-label">Available times — {selectedDay}</div>
+          <div className="time-grid">
+            {daySlots.map((slot) => (
+              <button
+                key={slot._id}
+                className={`time-btn ${selectedTime === slot.time ? 'active' : ''}`}
+                onClick={() => setSelectedTime(slot.time)}
+              >
+                {slot.time}
+              </button>
+            ))}
+          </div>
+        </div>
 
-                {selectedTime && (
-                  <div className="selected-slot-banner">
-                    <strong>Selected:</strong> {selectedDay} at {selectedTime} with {selectedCounsellor?.fullName}
-                  </div>
-                )}
+        {selectedTime && (
+          <div className="selected-slot-banner">
+            <strong>Selected:</strong> {selectedDay} at {selectedTime} with {selectedCounsellor?.fullName}
+          </div>
+        )}
+      </>
+    )}
 
-                <div className="sb-btn-row">
-                  <button className="sb-btn-secondary" onClick={() => setStep(1)}>Back</button>
-                  <button className="sb-btn-primary" disabled={!selectedTime} onClick={() => setStep(3)}>
-                    Review booking
-                  </button>
-                </div>
-              </div>
-            )}
+    <div className="sb-btn-row">
+      <button className="sb-btn-secondary" onClick={() => setStep(1)}>Back</button>
+      <button className="sb-btn-primary" disabled={!selectedTime} onClick={() => setStep(3)}>
+        Review booking
+      </button>
+    </div>
+  </div>
+)}
 
             {/* STEP 3 */}
             {step === 3 && (

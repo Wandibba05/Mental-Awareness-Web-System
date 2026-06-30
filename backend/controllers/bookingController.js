@@ -1,4 +1,5 @@
 const Booking = require('../models/Booking');
+const AvailabilitySlot = require('../models/AvailabilitySlot');
 
 // ───────────────────────────────
 // CREATE a new booking (student)
@@ -8,15 +9,30 @@ const createBooking = async (req, res) => {
     const studentId = req.user.id;
     const { counsellor, sessionType, reason, day, time } = req.body;
 
+    // Find the matching open slot for this counsellor/day/time
+    const slot = await AvailabilitySlot.findOne({
+      counsellor,
+      day,
+      time,
+      status: 'open',
+    });
+
     const newBooking = await Booking.create({
       student: studentId,
       counsellor,
+      slot: slot ? slot._id : undefined,
       sessionType,
       reason,
       day,
       time,
       status: 'pending',
     });
+
+    // Mark the slot as booked if we found one
+    if (slot) {
+      slot.status = 'booked';
+      await slot.save();
+    }
 
     const populatedBooking = await newBooking.populate('counsellor', 'fullName specialisation');
 
@@ -77,6 +93,11 @@ const updateBookingStatus = async (req, res) => {
 
     if (!booking) {
       return res.status(404).json({ message: 'Booking not found' });
+    }
+
+    // If the booking was rejected/cancelled, free up the slot again
+    if ((status === 'cancelled' || status === 'rescheduled') && booking.slot) {
+      await AvailabilitySlot.findByIdAndUpdate(booking.slot, { status: 'open' });
     }
 
     res.status(200).json(booking);
