@@ -2,6 +2,7 @@ const Student = require('../models/Student');
 const Counsellor = require('../models/Counsellor');
 const Admin = require('../models/Admin');
 const generateToken = require('../middleware/generateToken');
+const { sendTwoFactorCode } = require('../middleware/emailService');
 
 // Map role names to their models
 const getModel = (role) => {
@@ -84,6 +85,25 @@ const loginUser = async (req, res) => {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
+    // For admin — generate and send 2FA code to email
+    if (role === 'admin') {
+      const code = Math.floor(100000 + Math.random() * 900000).toString();
+      const expiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+      user.twoFactorCode = code;
+      user.twoFactorExpiry = expiry;
+      await user.save();
+
+      await sendTwoFactorCode(email, code);
+
+      return res.status(200).json({
+        message: '2FA code sent to your email. Please check your inbox.',
+        requiresTwoFactor: true,
+        email: email,
+      });
+    }
+
+    // For student and counsellor — log in directly
     res.status(200).json({
       _id: user._id,
       fullName: user.fullName,
@@ -97,4 +117,44 @@ const loginUser = async (req, res) => {
   }
 };
 
-module.exports = { registerUser, loginUser };
+// ───────────────────────────────
+// VERIFY 2FA CODE (admin only)
+// ───────────────────────────────
+const verifyTwoFactor = async (req, res) => {
+  try {
+    const { email, code } = req.body;
+
+    const admin = await Admin.findOne({ email });
+    if (!admin) {
+      return res.status(404).json({ message: 'Admin account not found.' });
+    }
+
+    // Check if code has expired
+    if (!admin.twoFactorExpiry || new Date() > admin.twoFactorExpiry) {
+      return res.status(401).json({ message: 'Your verification code has expired. Please log in again.' });
+    }
+
+    // Check if code matches
+    if (admin.twoFactorCode !== code) {
+      return res.status(401).json({ message: 'Invalid verification code. Please try again.' });
+    }
+
+    // Clear the code after successful verification
+    admin.twoFactorCode = '';
+    admin.twoFactorExpiry = null;
+    await admin.save();
+
+    res.status(200).json({
+      _id: admin._id,
+      fullName: admin.fullName,
+      email: admin.email,
+      role: 'admin',
+      status: admin.status,
+      token: generateToken(admin._id, 'admin'),
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+module.exports = { registerUser, loginUser, verifyTwoFactor };
