@@ -1,12 +1,24 @@
 const Student = require('../models/Student');
+const Booking = require('../models/Booking');
 
 // ───────────────────────────────
 // GET all students (admin only)
 // ───────────────────────────────
+
+
 const getAllStudents = async (req, res) => {
   try {
     const students = await Student.find().select('-password');
-    res.status(200).json(students);
+
+    // Count bookings per student
+    const studentsWithCounts = await Promise.all(
+      students.map(async (s) => {
+        const sessionCount = await Booking.countDocuments({ student: s._id });
+        return { ...s.toObject(), sessionCount };
+      })
+    );
+
+    res.status(200).json(studentsWithCounts);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }

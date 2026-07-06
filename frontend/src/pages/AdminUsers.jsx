@@ -182,9 +182,9 @@ const filteredCounsellors = counsellors.filter((c) =>
         </div>
       </div>
     </td>
-    <td>{c.specialisation || 'General counselling'}</td>
-    <td>—</td>
-    <td>—</td>
+   <td>{c.specialisation || 'General counselling'}</td>
+<td>{c.sessionCount ?? 0}</td>
+<td>—</td>
     <td>
       <span className={`au-status-badge ${c.status}`}>
         {c.status === 'active' && '✅ Active'}

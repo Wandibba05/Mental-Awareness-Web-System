@@ -26,10 +26,14 @@ const adminSchema = new mongoose.Schema({
     type: String,
     default: '',
   },
-  twoFactorSecret: {
-    type: String,
-    default: '',
-  },
+  twoFactorCode: {
+  type: String,
+  default: '',
+},
+twoFactorExpiry: {
+  type: Date,
+  default: null,
+},
   status: {
     type: String,
     enum: ['active', 'disabled'],
