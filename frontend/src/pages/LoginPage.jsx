@@ -101,10 +101,35 @@ const LoginPage = () => {
         {/* Footer */}
         <div className="card-footer">
           <span>{currentRole.footer} </span>
-          <a href="#!" style={{ color: currentRole.color, fontWeight: '700' }}>
-            {currentRole.footerLink}
-          </a>
+          {activeRole === 'student' ? (
+            <button
+              type="button"
+              onClick={() => navigate('/register')}
+              style={{ background: 'none', border: 'none', color: currentRole.color, fontWeight: '700', cursor: 'pointer', fontSize: '14px' }}
+            >
+              {currentRole.footerLink}
+            </button>
+          ) : (
+            <a href="#!" style={{ color: currentRole.color, fontWeight: '700' }}>
+              {currentRole.footerLink}
+            </a>
+          )}
         </div>
+
+        {/* Register link for counsellors too */}
+        {activeRole === 'counsellor' && (
+          <div style={{ textAlign: 'center', marginTop: '8px', fontSize: '13px', color: '#667085' }}>
+            New counsellor?{' '}
+            <button
+              type="button"
+              onClick={() => navigate('/register')}
+              style={{ background: 'none', border: 'none', color: currentRole.color, fontWeight: 700, cursor: 'pointer', fontSize: '13px' }}
+            >
+              Register here
+            </button>
+          </div>
+        )}
+
       </div>
     </div>
   );

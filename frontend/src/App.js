@@ -13,6 +13,7 @@ import CounsellorProfile from './pages/CounsellorProfile';
 import AdminUsers from './pages/AdminUsers';
 import AdminReports from './pages/AdminReports';
 import AdminJournals from './pages/AdminJournals';
+import RegisterPage from './pages/RegisterPage';
 function App() {
   return (
     <Router>
@@ -32,6 +33,7 @@ function App() {
 <Route path="/admin/users" element={<AdminUsers />} />
 <Route path="/admin/reports" element={<AdminReports />} />
 <Route path="/admin/journals" element={<AdminJournals />} />
+<Route path="/register" element={<RegisterPage />} />
       </Routes>
     </Router>
   );
