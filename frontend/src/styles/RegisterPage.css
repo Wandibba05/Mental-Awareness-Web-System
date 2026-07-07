@@ -1,0 +1,210 @@
+/* RegisterPage.css */
+* { box-sizing: border-box; }
+
+.reg-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.reg-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  padding: 36px 32px;
+  width: 100%;
+  max-width: 480px;
+}
+
+/* Header */
+.reg-brand {
+  font-size: 20px;
+  font-weight: 700;
+  color: #101828;
+  margin-bottom: 12px;
+}
+
+.reg-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #101828;
+  margin: 0 0 6px;
+}
+
+.reg-sub {
+  font-size: 13px;
+  color: #667085;
+  margin: 0 0 24px;
+}
+
+/* Role selector */
+.reg-role-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.reg-role-btn {
+  flex: 1;
+  height: 44px;
+  border-radius: 8px;
+  border: 1.5px solid #d0d5dd;
+  background: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  color: #667085;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  transition: all 0.2s;
+}
+
+.reg-role-btn:hover { border-color: #98a2b3; }
+
+/* Notice */
+.reg-notice {
+  background: #f0f9ff;
+  border: 1.5px solid #bae6fd;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #0369a1;
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+/* Error */
+.reg-error {
+  background: #fef2f2;
+  border: 1.5px solid #fca5a5;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #991b1b;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Form */
+.reg-form { display: flex; flex-direction: column; gap: 14px; }
+
+.reg-field { display: flex; flex-direction: column; gap: 5px; }
+
+.reg-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #344054;
+}
+
+.reg-input {
+  height: 42px;
+  border: 1.5px solid #d0d5dd;
+  border-radius: 8px;
+  background: #f9fafb;
+  padding: 0 12px;
+  font-size: 14px;
+  color: #101828;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+.reg-input:focus { border-color: #1d4ed8; background: #ffffff; }
+.reg-input::placeholder { color: #98a2b3; }
+
+.reg-input-wrap { position: relative; display: flex; align-items: center; }
+.reg-input-wrap .reg-input { padding-right: 40px; }
+
+.reg-toggle-password {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0;
+}
+
+/* Submit button */
+.reg-submit-btn {
+  height: 46px;
+  border-radius: 8px;
+  border: none;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  transition: opacity 0.2s;
+  margin-top: 4px;
+}
+
+.reg-submit-btn:hover { opacity: 0.9; }
+.reg-submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Login link */
+.reg-login-link {
+  text-align: center;
+  font-size: 13px;
+  color: #667085;
+  margin-top: 18px;
+}
+
+/* Success card */
+.reg-success-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  padding: 48px 32px;
+  width: 100%;
+  max-width: 480px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.reg-success-card h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #101828;
+  margin: 0;
+}
+
+.reg-success-card p {
+  font-size: 14px;
+  color: #667085;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 360px;
+}
+
+.reg-login-btn {
+  height: 44px;
+  padding: 0 28px;
+  border-radius: 8px;
+  border: none;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin-top: 8px;
+}
+
+.reg-login-btn:hover { opacity: 0.9; }
+
+@media (max-width: 480px) {
+  .reg-card { padding: 24px 20px; }
+}
